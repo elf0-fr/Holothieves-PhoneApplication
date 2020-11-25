@@ -1,5 +1,8 @@
 package com.pfejin.escapegameiot.messageList
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.text.style.BackgroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pfejin.escapegameiot.R
 
 class MessageListAdapter(private val messageList: List<String>) : RecyclerView.Adapter<MessageListAdapter.MessageViewHolder>() {
+    var messageType = 0
+
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(message: String) {
             itemView.apply {
@@ -18,8 +23,16 @@ class MessageListAdapter(private val messageList: List<String>) : RecyclerView.A
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
-        return MessageViewHolder(itemView)
+        if (messageType % 2 == 0) {
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.player_message, parent, false)
+            ++messageType
+            return MessageViewHolder(itemView)
+        }
+        else {
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.gm_message, parent, false)
+            ++messageType
+            return MessageViewHolder(itemView)
+        }
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
