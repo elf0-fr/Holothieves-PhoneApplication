@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pfejin.escapegameiot.R
 
 class MessageListFragment : Fragment() {
-    private val messageList = listOf("Task 1", "Task 2", "Task 3")
+    private val messageList = listOf("message 1", "message 2", "message 3", "autre message", "autre message", "autre message", "autre message", "autre message", "autre message", "autre message", "autre message", "autre message", "autre message", "autre message", "autre message")
 
     override fun onCreateView(
         inflater: LayoutInflater,
