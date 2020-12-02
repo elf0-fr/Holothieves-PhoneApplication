@@ -10,28 +10,27 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.pfejin.escapegameiot.R
 
-class MessageListAdapter(private val messageList: List<String>) : RecyclerView.Adapter<MessageListAdapter.MessageViewHolder>() {
-    var messageType = 0
+class MessageListAdapter(private val messageList: List<Message>) : RecyclerView.Adapter<MessageListAdapter.MessageViewHolder>() {
 
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(message: String) {
+        fun bind(message: Message) {
             itemView.apply {
                 val textView = findViewById<TextView>(R.id.message)
-                textView.text = message
+                textView.text = message.text
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        if (messageType % 2 == 0) {
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.player_message, parent, false)
-            ++messageType
-            return MessageViewHolder(itemView)
-        }
-        else {
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.gm_message, parent, false)
-            ++messageType
-            return MessageViewHolder(itemView)
+        return when (viewType) {
+            0 -> {
+                val itemView = LayoutInflater.from(parent.context).inflate(R.layout.player_message, parent, false)
+                MessageViewHolder(itemView)
+            }
+            else -> {
+                val itemView = LayoutInflater.from(parent.context).inflate(R.layout.gm_message, parent, false)
+                MessageViewHolder(itemView)
+            }
         }
     }
 
@@ -41,6 +40,10 @@ class MessageListAdapter(private val messageList: List<String>) : RecyclerView.A
 
     override fun getItemCount(): Int {
         return messageList.size;
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return messageList[position].author.ordinal
     }
 
 }
