@@ -28,18 +28,11 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".MainActivity">
 
-<!--<ImageView-->
-<!--    android:id="@+id/context_image"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="100dp"-->
-<!--    android:src="@drawable/ic_baseline_warning_24"-->
-<!--    android:background="@color/yellow"/>-->
-
-<fragment
-    android:id="@+id/fragment_messagelist"
-    android:name="com.pfejin.escapegameiot.messageList.MessageListFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout="@layout/fragment_message_list" />
+    <fragment
+        android:id="@+id/fragment_messagelist"
+        android:name="com.pfejin.escapegameiot.messageList.MessageListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_message_list" />
 
 </LinearLayout>
