@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layoutAnimation="@anim/layout_animation_from_bottom">
+    android:layoutAnimation="@anim/layout_animation_from_bottom" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            card_view:cardCornerRadius="20dp">
+            card_view:cardCornerRadius="20dp" >
 
             <TextView
                 android:id="@+id/message"

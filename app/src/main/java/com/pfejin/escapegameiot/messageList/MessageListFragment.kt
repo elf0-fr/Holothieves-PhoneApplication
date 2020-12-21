@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,53 +14,54 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pfejin.escapegameiot.R
 
+
 class MessageListFragment : Fragment() {
     private val nextMessageList = mutableListOf<Message>(
-        Message(
-            MessageAuthor.GAME_MASTER,
-            """
-                Vous avez donc réussi à vous introduire dans la banque ! Je n'y crayais pas.
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                Vous avez donc réussi à vous introduire dans la banque ! Je n'y croyais pas.
                 Ha ha ha !
-                Maintenant attez-vous d'accomplir votre mission !
+                Maintenant hâtez-vous d'accomplir votre mission !
                 Je veux ces données...
             """.trimIndent()),
-        Message(
-            MessageAuthor.GAME_MASTER,
-            """
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
                 Il vous suffit de récupérer l'ID du serveur. Ça ne devrait pas vous prendre trop de temps.
-                Je vous conseille de bien prendre connaissance de la pièce. Notifier moi quand ce sera fait.
+                Je vous conseille de bien prendre connaissance de la pièce. Notifiez moi quand ce sera fait.
             """.trimIndent()),
-        Message(
-            MessageAuthor.PLAYER,
-            """
+            Message(
+                    MessageAuthor.PLAYER,
+                    """
                 Nous ne trouvons pas l'ID du serveur dans la pièce.
             """.trimIndent()),
-        Message(
-            MessageAuthor.GAME_MASTER,
-            """
-                Vous devez d'abord accèder à la salle des serveurs, mais vous ne pouvez vous y rendre directement.
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                Vous devez d'abord accéder à la salle des serveurs, mais vous ne pouvez vous y rendre directement.
                 Trouvez un moyen de l'atteindre sans sortir de la salle.
             """.trimIndent()),
-        Message(
-            MessageAuthor.PLAYER,
-            """
+            Message(
+                    MessageAuthor.PLAYER,
+                    """
                 Nous avons trouvé les contrôles d'un drone mais nous n'avons pas les autorisations nécessaire à son activation.
             """.trimIndent()),
-        Message(
-            MessageAuthor.GAME_MASTER,
-            """
-                C'est à votre coéquipier de vous accorder l'accès. Grâce à son dispositif extra-sensoriel il seracapable de voir la position du drone même à travers les obstacles. Idéale, non ?
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                C'est à votre coéquipier de vous accorder l'accès. Grâce à son dispositif extra-sensoriel il sera capable de voir la position du drone même à travers les obstacles. Idéal, non ?
                 Cependant, je crains qu'il n'ait besoin d'une connexion wifi stable.
             """.trimIndent()),
-        Message(
-            MessageAuthor.GAME_MASTER,
-            """
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
                 Attention !! Vous perdez trop de temps.
-                Les gardes vont bienôt finir leur poses.
+                Les gardes vont bientôt finir leur pauses.
             """.trimIndent()),
-        Message(
-            MessageAuthor.GAME_MASTER,
-            """
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
                 Attention !! Un garde se rapproche !
                 Faites le moins de bruit possible, pour ne pas vous faire remarquer.
             """.trimIndent()),
@@ -74,9 +78,9 @@ class MessageListFragment : Fragment() {
     private lateinit var imageContext: ImageView
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_message_list, container, false)
     }
@@ -124,8 +128,29 @@ class MessageListFragment : Fragment() {
             imageContext.setImageResource(R.drawable.ic_baseline_warning_24)
         }
 
+        recyclerView.layoutAnimationListener = object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {
+//                recyclerView.layoutManager?.findViewByPosition(position - 1)?.clearAnimation()
+                for (i in 0 until position){
+                    recyclerView.layoutManager?.findViewByPosition(i)?.clearAnimation()
+                }
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+        }
+
         adapter.notifyItemInserted(position)
         recyclerView.scheduleLayoutAnimation();
+
+//        val resId: Int = R.anim.layout_animation_from_bottom
+//        val animation = AnimationUtils.loadLayoutAnimation(context, resId).animation
+//        recyclerView.layoutManager?.findViewByPosition(position)?.startAnimation(animation)
 
         recyclerView.layoutManager?.scrollToPosition(position)
     }
