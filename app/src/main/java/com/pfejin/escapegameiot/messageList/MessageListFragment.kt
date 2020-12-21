@@ -107,13 +107,8 @@ class MessageListFragment : Fragment() {
                     }
                 }
 
-                override fun onAnimationEnd(animation: Animation?) {
-
-                }
-
-                override fun onAnimationRepeat(animation: Animation?) {
-
-                }
+                override fun onAnimationEnd(animation: Animation?) {}
+                override fun onAnimationRepeat(animation: Animation?) {}
             }
 
             adapter.messageList = it
@@ -124,10 +119,19 @@ class MessageListFragment : Fragment() {
 
         imageContext = view.findViewById(R.id.context_image)
 
-        val nextMessage = view.findViewById<FloatingActionButton>(R.id.next_message)
-        nextMessage.setOnClickListener {
-//            getNextMessage()
+        val nextEnigmaButton = view.findViewById<FloatingActionButton>(R.id.next_enigma)
+        nextEnigmaButton.setOnClickListener {
             messageListViewModel.sendFinished()
+        }
+
+        val hintButton = view.findViewById<FloatingActionButton>(R.id.hint)
+        hintButton.setOnClickListener {
+            messageListViewModel.sendQuestion()
+        }
+
+        val previousEnigmaButton = view.findViewById<FloatingActionButton>(R.id.previous_enigma)
+        previousEnigmaButton.setOnClickListener {
+            messageListViewModel.sendUnfinished()
         }
 
         messageListViewModel.receiveFirstHint()
