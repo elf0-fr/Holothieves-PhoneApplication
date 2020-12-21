@@ -10,7 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.pfejin.escapegameiot.R
 
-class MessageListAdapter(private val messageList: List<Message>) : RecyclerView.Adapter<MessageListAdapter.MessageViewHolder>() {
+class MessageListAdapter() : RecyclerView.Adapter<MessageListAdapter.MessageViewHolder>() {
+
+    public var messageList: List<Message> = emptyList()
 
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(message: Message) {
