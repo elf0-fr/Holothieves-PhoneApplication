@@ -4,11 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class MessageListViewModel : ViewModel() {
     private val _messagesList = MutableLiveData<List<Message>>()
     public val messagesList: LiveData<List<Message>> = _messagesList
+
+    private var index: Int = 0
+    private var hintIndex: Int = 0
+    private val delayMessage: Long = 700
 
     private val questionsPlayerList = listOf<Message>(
             Message(
@@ -77,30 +83,178 @@ class MessageListViewModel : ViewModel() {
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Vous avez donc réussi à vous introduire dans la banque ! Je n'y croyais pas.
-                    Ha ha ha !
-                    Maintenant hâtez-vous d'accomplir votre mission !
-                    Je veux ces données...
-                    Il vous suffit de récupérer l'ID du serveur. Ça ne devrait pas vous prendre trop de temps.
-                    """.trimIndent()),
-            Message(
-                    MessageAuthor.GAME_MASTER,
-                    """
-                    Je vous conseille de bien prendre connaissance de la pièce. Notifiez moi quand ce sera fait.
+                    N’hésitez pas à vous aider du matériel de haute technologie à votre disposition et d’explorer l’ensemble de la pièce.
                     """.trimIndent()
             ),
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Vous devez d'abord accéder à la salle des serveurs, mais vous ne pouvez vous y rendre directement.
-                    Trouvez un moyen de l'atteindre sans sortir de la salle.
-                    """.trimIndent()),
+                    Vous avez normalement réussi à hacker un drone. Vous pouvez maintenant le déplacer dans les conduits d’aération avec un joystick. Un code devrait être visible ensuite.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Il n’y a pas un système de digicode quelque part dans la pièce ?
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Avec le casque, vous devriez apercevoir l’élément à mettre en état de nuire.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Avec le casque, vous pouvez identifier les éléments à réparer.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    La coupure d’électricité a permis d’ouvrir un tiroir : il doit y avoir quelque chose d’utile dedans.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Vous avez gagné.
+                    """.trimIndent()
+            ),
     )
 
-    fun receiveFirstHint() {
+    private val secondHintGMList = listOf<Message>(
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Mettez le casque et trouvez la borne wifi en vous déplaçant dans la pièce.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Je ne peux pas plus vous aider.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Je ne peux pas plus vous aider.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Pour mettre en état de nuire cet élément, mettez le dans l’eau
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Je ne peux pas plus vous aider.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Je ne peux pas plus vous aider.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Vous avez gagné.
+                    """.trimIndent()
+            ),
+    )
+
+    private val finishedGMList = listOf<Message>(
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Ici votre patron, bien joué vous êtes maintenant entré au sein de la banque sans vous faire repérer. Cependant, vous disposez de seulement 20 minutes avant que le garde de surveillance ne revienne de sa pause, alors vous n’avez pas une seconde à perdre ! 
+                    Vous devez tout d’abord vous connecter au réseau wifi.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Bien joué ! Vous devriez arriver à trouver un code.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Bien joué ! Vous devriez pouvoir rentrer le code quelque part…
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Attention vous avez déclenché une alarme ! Il faut que vous trouviez un moyen de l’arrêter rapidement pour éviter de vous faire repérer.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    En coupant l’alarme, vous avez coupé l’électricité… Trouvez un moyen de le remettre avant que les gardes n’arrivent.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Parfait maintenant il vous reste juste à désactiver le pare-feu et à télécharger les données.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Bravo vous avez réussi !
+                    """.trimIndent()
+            ),
+    )
+
+    fun receiveHint() {
         viewModelScope.launch {
+            delay(delayMessage)
             val editableList = _messagesList.value.orEmpty().toMutableList()
-            editableList.add(firstHintGMList[0])
+            when (hintIndex) {
+                0 -> editableList.add(firstHintGMList[index])
+                1 -> editableList.add(secondHintGMList[index])
+                else -> editableList.add(
+                        Message(
+                                MessageAuthor.GAME_MASTER,
+                                """
+                                Je ne peux pas plus vous aider.
+                                """.trimIndent()
+                        )
+                    )
+            }
+
+            ++hintIndex
+            _messagesList.value = editableList
+        }
+    }
+
+    fun startGM() {
+        viewModelScope.launch {
+            delay(delayMessage)
+            val editableList = _messagesList.value.orEmpty().toMutableList()
+            editableList.add(finishedGMList[0])
+            _messagesList.value = editableList
+        }
+    }
+
+    fun receiveFinished() {
+        viewModelScope.launch {
+            delay(delayMessage)
+            if (index < 6) {
+                ++index
+            }
+            hintIndex = 0
+            val editableList = _messagesList.value.orEmpty().toMutableList()
+            editableList.add(finishedGMList[index])
             _messagesList.value = editableList
         }
     }
@@ -108,7 +262,7 @@ class MessageListViewModel : ViewModel() {
     fun sendFinished() {
         viewModelScope.launch {
             val editableList = _messagesList.value.orEmpty().toMutableList()
-            editableList.add(finishedPlayerList[0])
+            editableList.add(finishedPlayerList[Random.nextInt(0, 2)])
             _messagesList.value = editableList
         }
     }
@@ -116,7 +270,11 @@ class MessageListViewModel : ViewModel() {
     fun sendUnfinished() {
         viewModelScope.launch {
             val editableList = _messagesList.value.orEmpty().toMutableList()
-            editableList.add(unfinishedPlayerList[0])
+            editableList.add(unfinishedPlayerList[Random.nextInt(0, 2)])
+            if (index > 0) {
+                --index
+            }
+            hintIndex = 0
             _messagesList.value = editableList
         }
     }
@@ -124,7 +282,7 @@ class MessageListViewModel : ViewModel() {
     fun sendQuestion() {
         viewModelScope.launch {
             val editableList = _messagesList.value.orEmpty().toMutableList()
-            editableList.add(questionsPlayerList[0])
+            editableList.add(questionsPlayerList[Random.nextInt(0, 2)])
             _messagesList.value = editableList
         }
     }

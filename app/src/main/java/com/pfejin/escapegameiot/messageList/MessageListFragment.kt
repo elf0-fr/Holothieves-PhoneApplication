@@ -122,19 +122,22 @@ class MessageListFragment : Fragment() {
         val nextEnigmaButton = view.findViewById<FloatingActionButton>(R.id.next_enigma)
         nextEnigmaButton.setOnClickListener {
             messageListViewModel.sendFinished()
+            messageListViewModel.receiveFinished()
         }
 
         val hintButton = view.findViewById<FloatingActionButton>(R.id.hint)
         hintButton.setOnClickListener {
             messageListViewModel.sendQuestion()
+            messageListViewModel.receiveHint()
         }
 
         val previousEnigmaButton = view.findViewById<FloatingActionButton>(R.id.previous_enigma)
         previousEnigmaButton.setOnClickListener {
             messageListViewModel.sendUnfinished()
+            messageListViewModel.receiveHint()
         }
 
-        messageListViewModel.receiveFirstHint()
+        messageListViewModel.startGM()
     }
 
 //    private fun getNextMessage() {
