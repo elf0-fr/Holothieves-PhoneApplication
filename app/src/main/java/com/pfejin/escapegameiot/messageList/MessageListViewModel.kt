@@ -16,6 +16,10 @@ class MessageListViewModel : ViewModel() {
     private var hintIndex: Int = 0
     private val delayMessage: Long = 700
 
+    private val messageCount by lazy {
+        finishedGMList.size
+    }
+
     private val questionsPlayerList = listOf<Message>(
             Message(
                     MessageAuthor.PLAYER,
@@ -89,13 +93,19 @@ class MessageListViewModel : ViewModel() {
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Vous avez normalement réussi à hacker un drone. Vous pouvez maintenant le déplacer dans les conduits d’aération avec un joystick. Un code devrait être visible ensuite.
+                    Une fois connecté à la borne wi-fi un bouton est apparu dans le casque pour hacker un drone.
                     """.trimIndent()
             ),
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Il n’y a pas un système de digicode quelque part dans la pièce ?
+                    Un indice a du apparaître quelque part.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Il n’y a pas un digicode dans la pièce ?
                     """.trimIndent()
             ),
             Message(
@@ -107,19 +117,19 @@ class MessageListViewModel : ViewModel() {
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Avec le casque, vous pouvez identifier les éléments à réparer.
+                    Il faut procéder au redémarrage du système de lecteur de badge.
                     """.trimIndent()
             ),
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    La coupure d’électricité a permis d’ouvrir un tiroir : il doit y avoir quelque chose d’utile dedans.
+                    Aidez vous du casque pour télécharger les données.
                     """.trimIndent()
             ),
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Vous avez gagné.
+                    Vous avez gagné. Je n'ai pas d'autres indices à vous donner.
                     """.trimIndent()
             ),
     )
@@ -134,7 +144,13 @@ class MessageListViewModel : ViewModel() {
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Je ne peux pas plus vous aider.
+                    Vous devriez pouvoir le faire bouger à l’aide d’un joystick...
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Il n’y a pas un papier dans la pièce avec des chiffres et des couleurs ?
                     """.trimIndent()
             ),
             Message(
@@ -146,7 +162,13 @@ class MessageListViewModel : ViewModel() {
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Pour mettre en état de nuire cet élément, mettez le dans l’eau
+                    Pour mettre en état de nuire cet élément, mettez le dans l’eau.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Il faut appuyer sur deux boutons en même temps pour réinitialiser le système.
                     """.trimIndent()
             ),
             Message(
@@ -158,13 +180,7 @@ class MessageListViewModel : ViewModel() {
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Je ne peux pas plus vous aider.
-                    """.trimIndent()
-            ),
-            Message(
-                    MessageAuthor.GAME_MASTER,
-                    """
-                    Vous avez gagné.
+                    Vous avez gagné. Je n'ai pas d'autres indices à vous donner.
                     """.trimIndent()
             ),
     )
@@ -180,13 +196,19 @@ class MessageListViewModel : ViewModel() {
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Bien joué ! Vous devriez arriver à trouver un code.
+                    Bien joué ! Vous devriez réussir à hacker un drone.
                     """.trimIndent()
             ),
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Bien joué ! Vous devriez pouvoir rentrer le code quelque part…
+                    Super ! Vous devriez réussir à trouver un code.
+                    """.trimIndent()
+            ),
+            Message(
+                    MessageAuthor.GAME_MASTER,
+                    """
+                    Vous devriez pouvoir mettre le code quelque part...
                     """.trimIndent()
             ),
             Message(
@@ -198,13 +220,13 @@ class MessageListViewModel : ViewModel() {
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    En coupant l’alarme, vous avez coupé l’électricité… Trouvez un moyen de le remettre avant que les gardes n’arrivent.
+                    Vous devez maintenant désactiver le pare-feu pour télécharger les données.
                     """.trimIndent()
             ),
             Message(
                     MessageAuthor.GAME_MASTER,
                     """
-                    Parfait maintenant il vous reste juste à désactiver le pare-feu et à télécharger les données.
+                    Parfait maintenant il vous reste juste à télécharger les données !
                     """.trimIndent()
             ),
             Message(
@@ -249,7 +271,7 @@ class MessageListViewModel : ViewModel() {
     fun receiveFinished() {
         viewModelScope.launch {
             delay(delayMessage)
-            if (index < 6) {
+            if (index < messageCount - 1) {
                 ++index
             }
             hintIndex = 0
